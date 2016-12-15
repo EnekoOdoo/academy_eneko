@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        
+    <!-- Academia -->
+        <!-- Lista Academia-->
+        <record model="ir.ui.view" id="academy_tree_view">
+                <field name="name">Academy Tree</field>
+                <field name="model">academy</field>
+                <field name="arch" type="xml">					
+                    <tree  colors="red:academy_type=='private';green:academy_type=='public';brown:academy_type=='concerted'">
+                        <field name="name"/>	
+                        <field name="academy_type"/>											
+                    </tree>					
+                </field>
+        </record>	
+        
+		<!-- Formulario Academias-->	 
+         <record model="ir.ui.view" id="academy_form_view">
+                <field name="name">Academy Form</field>
+                <field name="model">academy</field>
+                <field name="arch" type="xml">
+                    <form string="Academy">
+                        <group>
+                            <field name="name"  string="Academia"/>
+                            <field name="academy_type" string="Tipo de Academia"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="street" string="Calle"/>
+                            </group>
+                            <group>
+                                <field name="zip" string="C.P."/>
+                                <field name="city" string="Población"/>
+                                <field name="state_id" string="Provincia"/>
+                                <field name="country_id" string="País"/>								
+                            </group>
+                        </group>
+                        <group>	
+                            <group>															
+                                <field name="email" string="Correo electrónico"/>
+                            </group>
+                            <group>	
+                                <field name="phone" string="Teléfono"/>							
+                                <field name="mobile" string="Móvil"/>				
+                            </group>
+                        </group>
+                         <group>
+                            <field name="courses_ids"  string="Cursos"/>                            
+                        </group>
+                   </form>
+                </field>
+        </record>			
+    <!-- Curso -->
+      <!-- Lista Curso-->
+        <record model="ir.ui.view" id="course_tree_view">
+                <field name="name">Course Tree</field>
+                <field name="model">course</field>
+                <field name="arch" type="xml">					
+                    <tree>
+                        <field name="name"/>	
+                        <field name="description"/>			
+                        <field name="hours" string="Hours of the course"/>								
+                    </tree>					
+                </field>
+        </record>	
+        
+        <!-- Formulario curso -->				 
+		 <record model="ir.ui.view" id="course_form_view">
+				<field name="name">Course Form</field>
+				<field name="model">course</field>
+				<field name="arch" type="xml">
+					<form string="Course">
+						<group>
+							<field name="academy_id"  />							
+						</group>
+						<group>
+							<field name="name"  string="Course"/>
+							<field name="description" string="Description"/>
+						</group>
+						<group>
+							<group>
+								<field name="hours" string="Hours of the course"/>                                
+                                <field name="price" widget='monetary' />                              
+							</group>
+							<group>
+								<field name="max_students" string="Maximum Student" />
+								<field name="min_students" string="Maximum Student"/>																				
+							</group>
+						</group>						
+					</form>
+				</field>
+		</record>	
+        		
+    <!-- Materias -->
+      <!-- Lista Materias-->
+        <record model="ir.ui.view" id="subject_tree_view">
+                <field name="name">Subject Tree</field>
+                <field name="model">subject</field>
+                <field name="arch" type="xml">					
+                    <tree>
+                        <field name="name"/>	
+                        <field name="description"/>	
+                         <field name="hours" string="Hours of the subject"/>										
+                    </tree>					
+                </field>
+        </record>	
+        
+        <!-- Formulario materias-->				 
+		 <record model="ir.ui.view" id="subject_form_view">
+				<field name="name">Subject Form</field>
+				<field name="model">subject</field>
+				<field name="arch" type="xml">
+					<form string="Subject">
+						<group>
+							<field name="name"  string="Course"/>
+							<field name="description" string="Description"/>
+                            <field name="hours" string="Hours of the subject"/>     
+						</group>											
+					</form>
+				</field>
+		</record>			
+	 </data>
+</openerp>
