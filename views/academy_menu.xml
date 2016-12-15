@@ -2,37 +2,70 @@
 <openerp>
 	<data>
     <!-- Acciones -->
+        <!-- Academia -->
 		<record model="ir.actions.act_window" id="action_academy">
 			<field name="name">Academy</field>
 			<field name="res_model">academy</field>
 			<field name="view_type">form</field>					
 		</record>
-        
+        <!-- Cursos -->
 		<record model="ir.actions.act_window" id="action_course">
 			<field name="name">Course</field>
 			<field name="res_model">course</field>
 			<field name="view_type">form</field>					
 		</record>
-		
+		<!-- Materias -->
 		<record model="ir.actions.act_window" id="action_subject">
 			<field name="name">Subject</field>
 			<field name="res_model">subject</field>
 			<field name="view_type">form</field>					
 		</record>
-
+        <!-- Profesores -->
 		<record model="ir.actions.act_window" id="action_teacher">
 			<field name="name">Teacher</field>
-			<field name="res_model">res.partner</field>
+			<field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
 			<field name="view_type">form</field>	
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">tree,form</field>
             <field name ="domain">[('is_teacher', '=', True)]</field>			
 		</record>
-
+ 		<record model="ir.actions.act_window.view" id="action_teacher_form">
+             <field eval="1" name="sequence"/>
+			<field name="view_mode">form</field>
+            <field name="view_id" ref="teacher_form_view"/>		
+            <field name="act_window_id" ref="action_teacher"/>
+         </record>        
+        <record model="ir.actions.act_window.view" id="action_teacher_tree">
+            <field eval="2" name="sequence"/>
+			<field name="view_mode">tree</field>
+            <field name="view_id" ref="teacher_tree_view"/>		
+            <field name="act_window_id" ref="action_teacher"/>
+        </record>
+        
+        <!-- Estudiantes -->
 		<record model="ir.actions.act_window" id="action_student">
-			<field name="name">Student</field>
-			<field name="res_model">res.partner</field>
-			<field name="view_type">form</field>		
-             <field name ="domain">[('is_student', '=', True)]</field>	           			
-		</record>
+ 			<field name="name">Student</field>
+			<field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">tree,form</field>
+            <field name ="domain">[('is_student', '=', True)]</field>	           			
+        </record>
+        
+		<record model="ir.actions.act_window.view" id="action_student_form">
+             <field eval="1" name="sequence"/>
+			<field name="view_mode">form</field>
+            <field name="view_id" ref="student_form_view"/>		
+            <field name="act_window_id" ref="action_student"/>
+         </record>        
+        <record model="ir.actions.act_window.view" id="action_student_tree">
+            <field eval="2" name="sequence"/>
+			<field name="view_mode">tree</field>
+            <field name="view_id" ref="student_tree_view"/>		
+            <field name="act_window_id" ref="action_student"/>
+        </record>
         
     <!-- Elementos del menu -->
 		<menuitem id="root_menu_academy" 
