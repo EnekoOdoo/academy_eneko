@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
+    <!-- Acciones -->
 		<record model="ir.actions.act_window" id="action_academy">
 			<field name="name">Academy</field>
 			<field name="res_model">academy</field>
@@ -19,6 +20,21 @@
 			<field name="view_type">form</field>					
 		</record>
 
+		<record model="ir.actions.act_window" id="action_teacher">
+			<field name="name">Teacher</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_type">form</field>	
+            <field name ="domain">[('is_teacher', '=', True)]</field>			
+		</record>
+
+		<record model="ir.actions.act_window" id="action_student">
+			<field name="name">Student</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_type">form</field>		
+             <field name ="domain">[('is_student', '=', True)]</field>	           			
+		</record>
+        
+    <!-- Elementos del menu -->
 		<menuitem id="root_menu_academy" 
 			name="Academy Management"/>
 				
@@ -39,10 +55,22 @@
 			sequence="40"			
 			action="action_course" />
             
-		<menuitem id="menu_subject_ext" 
+ 		<menuitem id="menu_subjecy_ext" 
 			name="Subject" 
 			parent="menu_academy"
-			sequence="50"			
+			sequence="45"			
 			action="action_subject" />
+           
+		<menuitem id="menu_teacher_ext" 
+			name="Teacher" 
+			parent="menu_academy"
+			sequence="35"			
+			action="action_teacher" />
+            
+		<menuitem id="menu_student_ext" 
+			name="Student" 
+			parent="menu_academy"
+			sequence="50"			
+			action="action_student" />
 	 </data>
 </openerp>
