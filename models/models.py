@@ -58,6 +58,14 @@ class course(osv.osv):
         'price':fields.float('Price',(4,2),required=True, help = 'Price of the course'),
         'subject_ids':fields.many2many('subject','course_subject_table',string="Subject", help="Subjects of the course")     
     }
+###
+#    def onchange_academy_id(self, cr, uid, ids, academy_id, context=None):
+#        result = {}
+#        if academy_id:
+#            academy = self.pool.get('academy').browse(cr, uid, academy_id, context=context)
+#            result['academy'] = academy.name
+#        return {'value': result}
+
     
 class subject(osv.osv):
     """ Asignaturas """

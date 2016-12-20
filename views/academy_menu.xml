@@ -23,9 +23,9 @@
         <!-- Profesores -->
 		<record model="ir.actions.act_window" id="action_teacher">
 			<field name="name">Teacher</field>
-			<field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
 			<field name="view_type">form</field>	
+			<field name="type">ir.actions.act_window</field>
             <field eval="0" name="sequence"/>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('is_teacher', '=', True)]</field>			
@@ -46,9 +46,9 @@
         <!-- Estudiantes -->
 		<record model="ir.actions.act_window" id="action_student">
  			<field name="name">Student</field>
-			<field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
+			<field name="type">ir.actions.act_window</field>
             <field eval="0" name="sequence"/>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('is_student', '=', True)]</field>	           			
