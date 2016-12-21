@@ -31,25 +31,24 @@ from openerp import SUPERUSER_ID
 ACADEMY_TYPE_LIST = [('public', 'Public'), ('private', 'Private	'), ('concerted', 'Concerted')]
 
 
-class academy(osv.osv):
-    """ Academia """
-    _name = 'academy'
+class res_partner(osv.osv):
+    """ Academia """   
     _inherit = 'res.partner'
-#### Herencia prototipada (crea un nuevo objeto a partir de res_partner)
-    _columns = {        
+    #### Herencia clásica (extiende objeto res_partner)    class academy(osv.osv):
+    _columns = {
+        'is_academy': fields.boolean('Is Academy',  help="True if is Academy"),   
         'academy_type': fields.selection(ACADEMY_TYPE_LIST, 'Academy Type', help="Select the academy type: public, private, concerted."),  
-        'courses_ids':fields.one2many('course', 'academy_id',string="Courses"),      
+        'courses_ids':fields.one2many('course', 'academy_id',string="Courses"),
+        'is_student': fields.boolean('Is Student', help="True if is student"),  
+        'is_teacher': fields.boolean('Is Teacher', help="True if is teacher"),            
     }   
  
-    _defaults = {'academy_type': 'public',
-	}
-    
 class course(osv.osv):
     """ Curso """
     _name = 'course'
     
     _columns = {
-        'academy_id':fields.many2one('academy',required=True, string="Academy"),
+        'academy_id':fields.many2one('res.partner',required=True, domain =[('is_academy','=',True)], string="Academy"),
         'name':fields.char('Name', size=64,required=True),
         'description':fields.text('Description', required=False),
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),
@@ -58,15 +57,8 @@ class course(osv.osv):
         'price':fields.float('Price',(4,2),required=True, help = 'Price of the course'),
         'subject_ids':fields.many2many('subject','course_subject_table',string="Subject", help="Subjects of the course")     
     }
-###
-#    def onchange_academy_id(self, cr, uid, ids, academy_id, context=None):
-#        result = {}
-#        if academy_id:
-#            academy = self.pool.get('academy').browse(cr, uid, academy_id, context=context)
-#            result['academy'] = academy.name
-#        return {'value': result}
 
-    
+   
 class subject(osv.osv):
     """ Asignaturas """
     _name = 'subject'
@@ -76,13 +68,5 @@ class subject(osv.osv):
         'description':fields.text('Description', required=False),
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),        
     }
-class res_partner(osv.osv):
-    """ Estudiantes """   
-    _inherit = 'res.partner'
-#### Herencia clásica (extiende objeto res_partner)    
-    _columns = {        
-        'is_student': fields.boolean('Is Student', help="True if is student"),   
-        'is_teacher': fields.boolean('Is Teacher', help="True if is teacher"),     
-    }   
 
 	

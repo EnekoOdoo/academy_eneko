@@ -5,10 +5,26 @@
         <!-- Academia -->
 		<record model="ir.actions.act_window" id="action_academy">
 			<field name="name">Academy</field>
-			<field name="res_model">academy</field>
+			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>					
-		</record>
-        <!-- Cursos -->
+			<field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name ="domain">[('is_academy', '=', True)]</field>	 
+            <field name ="context" eval = "{'default_is_academy': True, 'default_academy_type' : 'public'}"/>	 
+        </record>        
+		<record model="ir.actions.act_window.view" id="action_academy_form">
+
+			<field name="view_mode">form</field>
+            <field name="view_id" ref="academy_form_view"/>		
+            <field name="act_window_id" ref="action_academy"/>
+         </record>        
+        <record model="ir.actions.act_window.view" id="action_academy_tree">
+
+			<field name="view_mode">tree</field>
+            <field name="view_id" ref="academy_tree_view"/>		
+            <field name="act_window_id" ref="action_academy"/>
+        </record>
+       <!-- Cursos -->
 		<record model="ir.actions.act_window" id="action_course">
 			<field name="name">Course</field>
 			<field name="res_model">course</field>
@@ -26,18 +42,19 @@
             <field name="res_model">res.partner</field>
 			<field name="view_type">form</field>	
 			<field name="type">ir.actions.act_window</field>
-            <field eval="0" name="sequence"/>
+
             <field name="view_mode">tree,form</field>
-            <field name ="domain">[('is_teacher', '=', True)]</field>			
+            <field name ="domain">[('is_teacher', '=', True)]</field>	
+            <field name ="context" eval = "{'default_is_teacher': True}"/>	 		
 		</record>
  		<record model="ir.actions.act_window.view" id="action_teacher_form">
-             <field eval="1" name="sequence"/>
+
 			<field name="view_mode">form</field>
             <field name="view_id" ref="teacher_form_view"/>		
             <field name="act_window_id" ref="action_teacher"/>
          </record>        
         <record model="ir.actions.act_window.view" id="action_teacher_tree">
-            <field eval="2" name="sequence"/>
+
 			<field name="view_mode">tree</field>
             <field name="view_id" ref="teacher_tree_view"/>		
             <field name="act_window_id" ref="action_teacher"/>
@@ -49,19 +66,20 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
 			<field name="type">ir.actions.act_window</field>
-            <field eval="0" name="sequence"/>
+
             <field name="view_mode">tree,form</field>
-            <field name ="domain">[('is_student', '=', True)]</field>	           			
+            <field name ="domain">[('is_student', '=', True)]</field>
+            <field name ="context" eval = "{'default_is_student': True}"/>	           			
         </record>
         
 		<record model="ir.actions.act_window.view" id="action_student_form">
-             <field eval="1" name="sequence"/>
+
 			<field name="view_mode">form</field>
             <field name="view_id" ref="student_form_view"/>		
             <field name="act_window_id" ref="action_student"/>
          </record>        
         <record model="ir.actions.act_window.view" id="action_student_tree">
-            <field eval="2" name="sequence"/>
+
 			<field name="view_mode">tree</field>
             <field name="view_id" ref="student_tree_view"/>		
             <field name="act_window_id" ref="action_student"/>
