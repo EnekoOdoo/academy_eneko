@@ -36,7 +36,14 @@
 			<field name="res_model">subject</field>
 			<field name="view_type">form</field>					
 		</record>
-        <!-- Profesores -->
+        <!-- Horarios -->
+		<record model="ir.actions.act_window" id="action_time_table">
+			<field name="name">TimeTable</field>
+			<field name="res_model">time.table</field>
+			<field name="view_type">form</field>					
+		</record>
+
+       <!-- Profesores -->
 		<record model="ir.actions.act_window" id="action_teacher">
 			<field name="name">Teacher</field>
             <field name="res_model">res.partner</field>
@@ -106,22 +113,28 @@
 			sequence="40"			
 			action="action_course" />
             
- 		<menuitem id="menu_subjecy_ext" 
+ 		<menuitem id="menu_subject_ext" 
 			name="Subject" 
 			parent="menu_academy"
 			sequence="45"			
 			action="action_subject" />
-           
-		<menuitem id="menu_teacher_ext" 
+            
+  		<menuitem id="menu_time_table_ext" 
+			name="TimeTable" 
+			parent="menu_academy"
+			sequence="46"			
+			action="action_time_table" />
+        
+        <menuitem id="menu_teacher_ext" 
 			name="Teacher" 
 			parent="menu_academy"
-			sequence="35"			
+			sequence="50"			
 			action="action_teacher" />
             
 		<menuitem id="menu_student_ext" 
 			name="Student" 
 			parent="menu_academy"
-			sequence="50"			
+			sequence="60"			
 			action="action_student" />
 	 </data>
 </openerp>

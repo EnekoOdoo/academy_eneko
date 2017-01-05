@@ -28,9 +28,9 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
-ACADEMY_TYPE_LIST = [('public', 'Public'), ('private', 'Private	'), ('concerted', 'Concerted')]
+ACADEMY_TYPE_LIST = [('public', 'Public'), ('private', 'Private'), ('concerted', 'Concerted')]
 
-
+DAY_OF_WEEK = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday')]
 class res_partner(osv.osv):
     """ Academia """   
     _inherit = 'res.partner'
@@ -69,4 +69,27 @@ class subject(osv.osv):
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),        
     }
 
-	
+   
+class time_table(osv.osv):
+    """ Horario """
+    _name = 'time.table'
+    
+    _columns = {
+        'name':fields.char('Name', size=64,required=True),
+        'description':fields.text('Description', required=False),
+        'time_table_detail_ids':fields.one2many('time.table.detail', 'time_table_id',string="Hours"),
+        'date_start':fields.date('Start Date',required=True, help = 'Date of the begin of the course'),  
+        'date_end':fields.date('End Date',required=True, help = 'Date of the end of the course'),      
+    }
+
+class time_table_detail(osv.osv):
+    """ Horario Detalle"""
+    _name = 'time.table.detail'
+    
+    _columns = {
+        'name':fields.char('Name', size=64,required=True),
+        'time_table_id': fields.many2one('time.table',required=True, string="Time table detail"),
+        'day_of_week': fields.selection(DAY_OF_WEEK, 'Day of the week', help="Day of the week"), 
+        'hour_start':fields.float('From',required=True, help = 'Hour of the begin on the day'),  
+        'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),      
+    }		
