@@ -32,6 +32,7 @@ This is a Test Module
     'data': [
         'views/academy_views.xml',
         'views/academy_menu.xml',
+        'workflow/course_workflow.xml'
     ],
     'demo': [],
     'test': [],

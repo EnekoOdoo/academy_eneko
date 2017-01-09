@@ -71,25 +71,31 @@
 				<field name="model">course</field>
 				<field name="arch" type="xml">
 					<form string="Course">
-						<group>
-							
-                            <field name="academy_id" />							
-						</group>
-						<group>
-							<field name="name"  string="Course"/>
-							<field name="description" string="Description"/>
-						</group>
-						<group>
-							<group>
-								<field name="hours" string="Hours of the course"/>                                
-                                <field name="price" />   
+                        <header>
+                            <field name="state" widget="statusbar"/>	
+                        </header>
+                        <sheet>
+                            <group>                                
+                                <field name="academy_id" />							
+                            </group>
+                            <group>
+                                <field name="name"  string="Course"/>
+                                <field name="description" string="Description"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="hours" string="Hours of the course"/>                                
+                                    <field name="price" />                                                      
+                                </group>
+                                <group>
+                                    <field name="max_students" string="Maximum Student" />
+                                    <field name="min_students" string="Maximum Student"/>																				
+                                </group>
+                            </group>
+                            <group>                                    
                                 <field name="subject_ids"  string="Subjects"/>                            
-							</group>
-							<group>
-								<field name="max_students" string="Maximum Student" />
-								<field name="min_students" string="Maximum Student"/>																				
-							</group>
-						</group>						
+                            </group>
+                        </sheet>
 					</form>
 				</field>
 		</record>	

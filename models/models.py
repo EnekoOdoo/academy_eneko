@@ -28,6 +28,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
+COURSE_STATE = [('draft', 'Draft'), ('confirmed', 'Confirmed'), ('in_process', 'In Process'), ('cancel', 'Cancel'), ('done', 'Done')]
 ACADEMY_TYPE_LIST = [('public', 'Public'), ('private', 'Private'), ('concerted', 'Concerted')]
 
 DAY_OF_WEEK = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday')]
@@ -55,8 +56,33 @@ class course(osv.osv):
         'max_students':fields.integer('Students Maximum',required=True, help = 'Maximum number of student'),
         'min_students':fields.integer('Students Minimum',required=True, help = 'Minimal number of student'),
         'price':fields.float('Price',(4,2),required=True, help = 'Price of the course'),
-        'subject_ids':fields.many2many('subject','course_subject_table',string="Subject", help="Subjects of the course")     
+        'subject_ids':fields.many2many('subject','course_subject_table',string="Subject", help="Subjects of the course"),
+        'state': fields.selection(COURSE_STATE, 'state', help="State of the course"),
     }
+    
+    _defaults = {
+                'state': 'draft',
+    }
+    
+    def action_draft(self, cr, uid, ids, context=None):
+        self.write (cr, uid, ids, {'state': 'draft'})
+        return True
+        
+    def action_confirmed(self, cr, uid, ids, context=None):
+        self.write (cr, uid, ids, {'state': 'confirmed'})
+        return True
+        
+    def action_in_process(self, cr, uid, ids, context=None):
+        self.write (cr, uid, ids, {'state': 'in_process'})
+        return True
+        
+    def action_cancel(self, cr, uid, ids, context=None):
+        self.write (cr, uid, ids, {'state': 'cancel'})
+        return True
+        
+    def action_done(self, cr, uid, ids, context=None):
+        self.write (cr, uid, ids, {'state': 'done'})
+        return True
 
    
 class subject(osv.osv):
