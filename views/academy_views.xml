@@ -70,8 +70,13 @@
 				<field name="name">Course Form</field>
 				<field name="model">course</field>
 				<field name="arch" type="xml">
-					<form string="Course">
+                    <form string="Course">
                         <header>
+                            <button name="button_draft" type="workflow" states="confirmed" string="Draft" />
+                            <button name="button_confirmed" type="workflow" states="draft" string="Confirmed" />
+                            <button name="button_in_process" type="workflow" states="confirmed" string="In Process" />
+                            <button name="button_cancel" type="workflow" states="draft,confirmed,in_process" string="Cancel" />
+                            <button name="button_done" type="workflow" states="in_process" string="Done" />
                             <field name="state" widget="statusbar"/>	
                         </header>
                         <sheet>
@@ -96,7 +101,7 @@
                                 <field name="subject_ids"  string="Subjects"/>                            
                             </group>
                         </sheet>
-					</form>
+                    </form>
 				</field>
 		</record>	
         		
