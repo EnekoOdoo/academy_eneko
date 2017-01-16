@@ -44,19 +44,18 @@
         
         
         <!-- Transition    -->
-
         <!-- Transition Draft    -->
         <record id="trans_draft_confirmed" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirmed"/>
             <field name="signal">button_confirmed</field>            
+            <field name="condition">action_draft_confirmed()</field> 
         </record>
          <record id="trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>            
-        </record>
-        
+        </record>        
         <!-- Transition Confirmed    -->
         <record id="trans_confirmed_draft" model="workflow.transition">
             <field name="act_from" ref="act_confirmed"/>
@@ -84,7 +83,5 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>            
         </record>
-
-
     </data>
 </openerp>

@@ -72,6 +72,10 @@ class course(osv.osv):
         self.write (cr, uid, ids, {'state': 'confirmed'})
         return True
         
+    def action_draft_confirmed(self, cr, uid, ids, context=None):
+        self.write (cr, uid, ids, {'state': 'confirmed'})
+        return True
+
     def action_in_process(self, cr, uid, ids, context=None):
         self.write (cr, uid, ids, {'state': 'in_process'})
         return True
@@ -118,4 +122,4 @@ class time_table_detail(osv.osv):
         'day_of_week': fields.selection(DAY_OF_WEEK, 'Day of the week', help="Day of the week"), 
         'hour_start':fields.float('From',required=True, help = 'Hour of the begin on the day'),  
         'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),      
-    }		
+    }       
