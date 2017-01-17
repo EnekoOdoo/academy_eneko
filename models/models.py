@@ -41,7 +41,8 @@ class res_partner(osv.osv):
         'academy_type': fields.selection(ACADEMY_TYPE_LIST, 'Academy Type', help="Select the academy type: public, private, concerted."),  
         'courses_ids':fields.one2many('course', 'academy_id',string="Courses"),
         'is_student': fields.boolean('Is Student', help="True if is student"),  
-        'is_teacher': fields.boolean('Is Teacher', help="True if is teacher"),            
+        'is_teacher': fields.boolean('Is Teacher', help="True if is teacher"),        
+   
     }   
  
 class course(osv.osv):
@@ -49,10 +50,13 @@ class course(osv.osv):
     _name = 'course'
     
     _columns = {
-        'academy_id':fields.many2one('res.partner',required=True, domain =[('is_academy','=',True)], string="Academy"),
+        'academy_id':fields.many2one('res.partner',required=True, domain =[('is_academy','=',True)], string="Academy",ondelete='restrict'),
+        'time_table_id': fields.many2one('time.table', help = "Time table of courses", string="Time Table", ondelete='restrict'),
         'name':fields.char('Name', size=64,required=True),
         'description':fields.text('Description', required=False),
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),
+        'date_start':fields.date('Start Date',required=True, help = 'Date of the begin of the course'),  
+        'date_end':fields.date('End Date',required=True, help = 'Date of the end of the course'),      
         'max_students':fields.integer('Students Maximum',required=True, help = 'Maximum number of student'),
         'min_students':fields.integer('Students Minimum',required=True, help = 'Minimal number of student'),
         'price':fields.float('Price',(4,2),required=True, help = 'Price of the course'),
@@ -65,26 +69,56 @@ class course(osv.osv):
     }
     
     def action_draft(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        
         self.write (cr, uid, ids, {'state': 'draft'})
         return True
         
     def action_confirmed(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        
         self.write (cr, uid, ids, {'state': 'confirmed'})
+        return True
+    
+    def signal_confirmed(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
+        self.signal_workflow(cr, uid, ids,'button_confirmed') #Dispara el signal del WF. Ejemplo de disparo WF indirecto
         return True
         
     def action_draft_confirmed(self, cr, uid, ids, context=None):
-        self.write (cr, uid, ids, {'state': 'confirmed'})
-        return True
+        if context is None:
+            context = {}
+            
+        course_object = self.browse(cr, uid, ids, context=context)         
+        
+        if course_object:
+            if course_object.subject_ids:
+                return True
+                
+        return False   
 
     def action_in_process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
         self.write (cr, uid, ids, {'state': 'in_process'})
         return True
         
     def action_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
         self.write (cr, uid, ids, {'state': 'cancel'})
         return True
         
     def action_done(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
         self.write (cr, uid, ids, {'state': 'done'})
         return True
 
@@ -108,8 +142,6 @@ class time_table(osv.osv):
         'name':fields.char('Name', size=64,required=True),
         'description':fields.text('Description', required=False),
         'time_table_detail_ids':fields.one2many('time.table.detail', 'time_table_id',string="Hours"),
-        'date_start':fields.date('Start Date',required=True, help = 'Date of the begin of the course'),  
-        'date_end':fields.date('End Date',required=True, help = 'Date of the end of the course'),      
     }
 
 class time_table_detail(osv.osv):
