@@ -42,6 +42,12 @@
 			<field name="res_model">time.table</field>
 			<field name="view_type">form</field>					
 		</record>
+         <!-- Asistencia Alumnos-->
+		<record model="ir.actions.act_window" id="action_student_attendance">
+			<field name="name">Student Attendance</field>
+			<field name="res_model">student.attendance</field>
+			<field name="view_type">form</field>					
+		</record>
 
        <!-- Profesores -->
 		<record model="ir.actions.act_window" id="action_teacher">
@@ -93,14 +99,20 @@
         </record>
         
     <!-- Elementos del menu -->
-		<menuitem id="root_menu_academy" 
+		<!-- Nivel 1 -->
+        <menuitem id="root_menu_academy" 
 			name="Academy Management"/>
 				
         <menuitem id="menu_academy" 
 			name="Main" 
 			parent="root_menu_academy"
 			sequence="20"			/>
-			
+        <menuitem id="menu_secundary" 
+                name="Secundary" 
+                parent="root_menu_academy"
+                sequence="25"			/>	
+        
+        <!-- Submenu de Main -->
 		<menuitem id="menu_academy_ext" 
 			name="Academy" 
 			parent="menu_academy"
@@ -136,5 +148,12 @@
 			parent="menu_academy"
 			sequence="60"			
 			action="action_student" />
+        
+        <!-- Submenu de Secundary -->
+		<menuitem id="menu_student_attendance_ext" 
+			name="Student Attendance" 
+			parent="menu_secundary"
+			sequence="30"			
+			action="action_student_attendance" />
 	 </data>
 </openerp>

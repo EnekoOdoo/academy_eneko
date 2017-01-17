@@ -29,6 +29,8 @@ from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
 COURSE_STATE = [('draft', 'Draft'), ('confirmed', 'Confirmed'), ('in_process', 'In Process'), ('cancel', 'Cancel'), ('done', 'Done')]
+ATTENDANCE_STATE = [('draft', 'Draft'), ('confirmed', 'Confirmed'), ('cancel', 'Cancel'), ('done', 'Done')]
+
 ACADEMY_TYPE_LIST = [('public', 'Public'), ('private', 'Private'), ('concerted', 'Concerted')]
 
 DAY_OF_WEEK = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday')]
@@ -60,12 +62,14 @@ class course(osv.osv):
         'max_students':fields.integer('Students Maximum',required=True, help = 'Maximum number of student'),
         'min_students':fields.integer('Students Minimum',required=True, help = 'Minimal number of student'),
         'price':fields.float('Price',(4,2),required=True, help = 'Price of the course'),
-        'subject_ids':fields.many2many('subject','course_subject_table',string="Subject", help="Subjects of the course"),
+        'subject_ids':fields.many2many('subject','course_subject_table',string="Subjects", help="Subjects of the course"),
+        'student_ids':fields.many2many('res.partner','course_student_table', domain =[('is_student','=',True)],string="Students", help="Students of the course"),
+        'teacher_ids':fields.many2many('res.partner','teacher_student_table', domain =[('is_teacher','=',True)],string="Teachers", help="Teachers of the course"),
         'state': fields.selection(COURSE_STATE, 'state', help="State of the course"),
     }
     
     _defaults = {
-                'state': 'draft',
+                'state': COURSE_STATE[0][0],
     }
     
     def action_draft(self, cr, uid, ids, context=None):
@@ -155,3 +159,34 @@ class time_table_detail(osv.osv):
         'hour_start':fields.float('From',required=True, help = 'Hour of the begin on the day'),  
         'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),      
     }       
+class student_attendance(osv.osv):
+    """ Asistencia alumnos Cabecera """
+    _name = 'student.attendance'
+    
+    _columns = {
+        'name':fields.char('Name', required=True, size=128),
+        'course_id': fields.many2one('course',required=True, string="Course to of the attendance's control"),
+        'subject_id': fields.many2one('subject',required=True, string="Subject of the attendance's control"),
+        'date_start':fields.date('Start Date',required=True, help = "Date of the begin of the attendance's control"),  
+        'date_end':fields.date('End Date',required=True, help = "Date of the end of the attendance's control"),      
+        'state': fields.selection(ATTENDANCE_STATE, 'state', help="State of the attendance"),
+
+    } 
+    _defaults = {
+                'state': ATTENDANCE_STATE[0][0],
+    }
+class student_attendance_detail(osv.osv):
+    """ Asistencia alumnos Detalle """
+    _name = 'student.attendance.detail'
+    
+    _columns = {
+        'name':fields.char('Name', required=True, size=64),
+        'attendance_id': fields.many2one('student.attendance',required=True, string="The attendance's control"),
+        'student_id': fields.many2one('res.partner',required=True,domain =[('is_student','=',True)], string="Student to the attendance's control"),
+        'attendance_date':fields.date('Date of attendance',required=True, help = "Date of the attendance"),  
+        'sign': fields.boolean(string="sign"),
+    } 
+    
+    _defaults = {
+                'sign': False,
+    }

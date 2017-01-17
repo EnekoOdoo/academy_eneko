@@ -112,9 +112,17 @@
                                     <field name="min_students" string="Maximum Student"/>																				
                                 </group>
                             </group>
-                            <group>                                    
-                                <field name="subject_ids"  string="Subjects"/>                            
-                            </group>
+                            <notebook>
+                                <page string="Subjects">
+                                    <field name="subject_ids"/>
+                                </page>
+                                <page string="Teachers">
+                                    <field name="teacher_ids"/>
+                                </page>                                
+                                <page string="Students">
+                                    <field name="student_ids"/>
+                                </page>
+                            </notebook>                            
                         </sheet>
                     </form>
 				</field>
@@ -299,5 +307,83 @@
 					</form>
 				</field>
 		</record>		 
+    <!-- Asistencia -->
+        <!-- Lista Asistenci
+        <record model="ir.ui.view" id="course_tree_view">
+                <field name="name">Course Tree</field>
+                <field name="model">course</field>
+                <field name="arch" type="xml">					
+                    <tree>
+                        <field name="state"/>
+                        <field name="academy_id"/>	
+                        <field name="name"/>	
+                        <field name="description"/>			
+                        <field name="hours" string="Hours of the course"/>	
+                        <field name="date_start"/>										
+                        <field name="date_end"/>
+ 						
+                    </tree>					
+                </field>
+        </record>	
+        -->
+        <!-- Formulario curso				 
+		 <record model="ir.ui.view" id="course_form_view">
+				<field name="name">Course Form</field>
+				<field name="model">course</field>
+				<field name="arch" type="xml">
+                    <form string="Course">
+                        <header>
+                            <button name="button_draft" type="workflow" states="confirmed" string="Draft" />
+                            <button name="signal_confirmed" type="object" states="draft" string="Confirmed" />
+                            <button name="button_in_process" type="workflow" states="confirmed" string="In Process" />
+                            <button name="button_cancel" type="workflow" states="draft,confirmed,in_process" string="Cancel" />
+                            <button name="button_done" type="workflow" states="in_process" string="Done" />
+                            <field name="state" widget="statusbar"/>	
+                        </header>
+                        <sheet>
+                            <group>                                
+                                <field name="academy_id" />							
+                            </group>
+                            <group>
+                                <field name="name"  string="Course"/>
+                                <field name="description" string="Description"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="date_start"/>										
+                                </group>
+                                <group>
+                                    <field name="date_end"/>
+                                </group>
+                            </group>
+                            <group>                                
+                                <field name="time_table_id" />							
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="hours" string="Hours of the course"/>                                
+                                    <field name="price" />                                                      
+                                </group>
+                                <group>
+                                    <field name="max_students" string="Maximum Student" />
+                                    <field name="min_students" string="Maximum Student"/>																				
+                                </group>
+                            </group>
+                            <notebook>
+                                <page string="Subjects">
+                                    <field name="subject_ids"/>
+                                </page>
+                                <page string="Teachers">
+                                    <field name="teacher_ids"/>
+                                </page>                                
+                                <page string="Students">
+                                    <field name="student_ids"/>
+                                </page>
+                            </notebook>                            
+                        </sheet>
+                    </form>
+				</field>
+		</record>	
+         -->
     </data>
 </openerp>
