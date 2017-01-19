@@ -54,7 +54,7 @@ class res_partner(osv.osv):
         
         #Comprobamos que si es una academia no hay el mismo nombre
         if current_object.is_academy:
-            previous_name_ids = self.search(cr,uid, [('name','=',current_object.name),('is_academy','=',True)], context=context)
+            previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=',current_object.name),('is_academy','=',True)], context=context)
             if previous_name_ids:
                 return False
         
