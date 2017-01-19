@@ -24,10 +24,13 @@
 #
 ##############################################################################
 #IMPORTS
+import logging
 from datetime import datetime, timedelta
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
+
+_logger = logging.getLogger(__name__)
 
 #VARIABLES
 COURSE_STATE = [('draft', 'Draft'), ('confirmed', 'Confirmed'), 
@@ -56,6 +59,8 @@ class res_partner(osv.osv):
         if current_object.is_academy:
             previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=',current_object.name),('is_academy','=',True)], context=context)
             if previous_name_ids:
+                _logger.info('-------------------------------LOGUEANDO-------------------------------')
+                _logger.info(previous_name_ids)
                 return False
         
    
