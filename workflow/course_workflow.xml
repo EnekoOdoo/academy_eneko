@@ -41,8 +41,7 @@
             <field name="kind">function</field>
             <field name="action">action_done()</field>
        </record>
-        
-        
+      
         <!-- Transition    -->
         <!-- Transition Draft    -->
         <record id="trans_draft_confirmed" model="workflow.transition">
