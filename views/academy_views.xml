@@ -21,7 +21,7 @@
                 <field name="arch" type="xml">
                     <form string="Academy">
                         <group>
-                            <field name="name"  string="Academia"/>
+                            <field name="name"  string="Academia" on_change="onchange_name(name)"/>
                             <field name="academy_type" string="Tipo de Academia"/>
                         </group>
                         <group>
@@ -44,9 +44,18 @@
                                 <field name="mobile" string="Móvil"/>				
                             </group>
                         </group>
-                         <group>
-                            <field name="courses_ids"  string="Cursos"/>                            
-                        </group>
+                         
+                        <label for="courses_ids" />
+                        <field name="courses_ids"  readonly="1"> 
+                            <tree>
+                                <field name="name"/>	
+                                <field name="description"/>			
+                                <field name="hours" string="Hours of the course"/>	
+                                <field name="date_start"/>										
+                                <field name="date_end"/> 						
+                                <field name="state"/>
+                            </tree>	                          
+                        </field>
                    </form>
                 </field>
         </record>			
@@ -63,8 +72,7 @@
                         <field name="description"/>			
                         <field name="hours" string="Hours of the course"/>	
                         <field name="date_start"/>										
-                        <field name="date_end"/>
- 						
+                        <field name="date_end"/> 						
                     </tree>					
                 </field>
         </record>	

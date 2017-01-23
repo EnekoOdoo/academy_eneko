@@ -44,8 +44,9 @@ DAY_OF_WEEK = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wedn
                 ('thursday', 'Thursday'), ('friday', 'Friday')]
 
 #CLASES
-""" Academia """ 
+# Academia 
 class res_partner(osv.osv):
+    """ Academia """ 
     _inherit = 'res.partner'
     
     def _check_academy_name(self,cr,uid, ids, context=None):
@@ -57,16 +58,19 @@ class res_partner(osv.osv):
         
         #Comprobamos que si es una academia no hay el mismo nombre
         if current_object.is_academy:
-            previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=',current_object.name),('is_academy','=',True)], context=context)
+           #Versión inicial 
+           #previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=',current_object.name),('is_academy','=',True)], context=context)
+            previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name),('is_academy','=',True)], context=context)
+
             if previous_name_ids:
-                _logger.info('-------------------------------LOGUEANDO-------------------------------')
+                _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
                 _logger.info(previous_name_ids)
+
                 return False
         
-   
         return True    
     
-    #### Herencia clásica (extiende objeto res_partner)    class academy(osv.osv):
+    #### Herencia clásica (extiende objeto res_partner) class academy(osv.osv):
     _columns = {
         'is_academy': fields.boolean('Is Academy',  help="True if is Academy"),   
         'academy_type': fields.selection(ACADEMY_TYPE_LIST, 'Academy Type', help="Select the academy type: public, private, concerted."),  
@@ -81,10 +85,20 @@ class res_partner(osv.osv):
         (_check_academy_name,_("The academy name must be unique"),['name'])
     ]
     
-
+    def onchange_name (self,cr,uid, ids, name, context=None):
+        if context is None:
+            context = {}
+            
+        res = {}
+       
+        if name:
+            res['value'] = {'name':name.upper()}
+            
+        return res
  
-""" Curso """
+# Curso
 class course(osv.osv):
+    """ Curso """
     _name = 'course'
     
     _columns = {
@@ -164,9 +178,9 @@ class course(osv.osv):
  
     """ Asignaturas """
 
-""" Asignatura """
+# Asignatura
 class subject(osv.osv):
-
+    """ Asignatura """
     _name = 'subject'
     
     _columns = {
@@ -175,8 +189,9 @@ class subject(osv.osv):
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),        
     }
  
-""" Horario de cada asignatura del curso"""
+# Horario de cada asignatura del curso
 class course_subject(osv.osv):
+    """ Horario de cada asignatura del curso"""
     _name = 'course.subject'
     
     _columns = {
@@ -186,8 +201,9 @@ class course_subject(osv.osv):
         'time_table_id': fields.many2one('time.table', string="Time table detail"),
     }
 
-""" Horario """   
+ # Horario
 class time_table(osv.osv):
+    """ Horario """  
     _name = 'time.table'
     
     _columns = {
@@ -201,8 +217,9 @@ class time_table(osv.osv):
                 'type': TIME_TABLE_TYPE[0][0],
     }
  
-""" Horario Detalle"""
+# Horario Detalle
 class time_table_detail(osv.osv):
+    """ Horario Detalle"""
     _name = 'time.table.detail'
     
     _columns = {
@@ -213,8 +230,9 @@ class time_table_detail(osv.osv):
         'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),      
     }       
 
-""" Asistencia alumnos Cabecera """
+# Asistencia alumnos Cabecera
 class student_attendance(osv.osv):
+    """ Asistencia alumnos Cabecera """
     _name = 'student.attendance'
    
     _columns = {
@@ -229,8 +247,9 @@ class student_attendance(osv.osv):
                 'state': ATTENDANCE_STATE[0][0],
     }
  
-""" Asistencia alumnos Detalle """
+# Asistencia alumnos Detalle
 class student_attendance_detail(osv.osv):
+    """ Asistencia alumnos Detalle """
     _name = 'student.attendance.detail'
     
     _columns = {
