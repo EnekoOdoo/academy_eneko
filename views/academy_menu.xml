@@ -127,13 +127,7 @@
 			parent="menu_academy"
 			sequence="40"			
 			action="action_course" />
-            
- 		<menuitem id="menu_subject_ext" 
-			name="Subject" 
-			parent="menu_academy"
-			sequence="45"			
-			action="action_subject" />          
-        
+                    
         <menuitem id="menu_teacher_ext" 
 			name="Teacher" 
 			parent="menu_academy"
@@ -153,6 +147,12 @@
 			action="action_student_attendance" />        
         
         <!-- Submenu de configuration -->        
+ 		<menuitem id="menu_subject_ext" 
+			name="Subject" 
+			parent="menu_configuration"
+			sequence="25"			
+			action="action_subject" />          
+
         <menuitem id="menu_time_table_ext" 
 			name="TimeTable" 
 			parent="menu_configuration"

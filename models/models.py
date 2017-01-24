@@ -49,7 +49,7 @@ class res_partner(osv.osv):
     """ Academia """ 
     _inherit = 'res.partner'
     
-    def _check_academy_name(self,cr,uid, ids, context=None):
+    def _check_name(self,cr,uid, ids, context=None):
         if context is None:
             context = {}
         
@@ -82,7 +82,7 @@ class res_partner(osv.osv):
     
     #Restricción lógica de Odoo a nivel python como equivalente a las de BB.DD.
     _constraints = [
-        (_check_academy_name,_("The academy name must be unique"),['name'])
+        (_check_name,_("The academy name must be unique"),['name'])
     ]
     
     def onchange_name (self,cr,uid, ids, name, context=None):
@@ -92,7 +92,7 @@ class res_partner(osv.osv):
         res = {}
        
         if name:
-            res['value'] = {'name':name.upper()}
+            res['value'] = {'name':name.title()}
             
         return res
  
@@ -182,12 +182,43 @@ class course(osv.osv):
 class subject(osv.osv):
     """ Asignatura """
     _name = 'subject'
+
+    def _check_name(self,cr,uid, ids, context=None):
+        if context is None:
+            context = {}
+        
+        #Instanciamos el registro que queremos guardar (browse similar antiguo read)       
+        current_object = self.browse(cr,uid, ids, context=context)
+        
+        previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name), context=context)
+
+        if previous_name_ids:
+            _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
+            _logger.info(previous_name_ids)
+
+            return False
+        
+        return True    
     
     _columns = {
         'name':fields.char('Name', size=64,required=True),
         'description':fields.text('Description', required=False),
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),        
     }
+    _constraints = [
+        (_check_name,_("The subject name must be unique"),['name'])
+    ]
+    
+    def onchange_name (self,cr,uid, ids, name, context=None):
+        if context is None:
+            context = {}
+            
+        res = {}
+       
+        if name:
+            res['value'] = {'name':name.title()}
+            
+        return res
  
 # Horario de cada asignatura del curso
 class course_subject(osv.osv):
@@ -205,6 +236,23 @@ class course_subject(osv.osv):
 class time_table(osv.osv):
     """ Horario """  
     _name = 'time.table'
+
+    def _check_name(self,cr,uid, ids, context=None):
+        if context is None:
+            context = {}
+        
+        #Instanciamos el registro que queremos guardar (browse similar antiguo read)       
+        current_object = self.browse(cr,uid, ids, context=context)
+        
+        previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name), context=context)
+
+        if previous_name_ids:
+            _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
+            _logger.info(previous_name_ids)
+
+            return False
+        
+        return True    
     
     _columns = {
         'name':fields.char('Name', size=64,required=True),
@@ -216,19 +264,60 @@ class time_table(osv.osv):
     _defaults = {
                 'type': TIME_TABLE_TYPE[0][0],
     }
+    _constraints = [
+        (_check_name,_("The Time Table name must be unique"),['name'])
+    ]
+    
+    def onchange_name (self,cr,uid, ids, name, context=None):
+        if context is None:
+            context = {}
+            
+        res = {}
+       
+        if name:
+            res['value'] = {'name':name.title()}
+            
+        return res
  
 # Horario Detalle
 class time_table_detail(osv.osv):
     """ Horario Detalle"""
     _name = 'time.table.detail'
+
+    def _check_time_range(self,cr,uid, ids, context=None):
+        if context is None:
+            context = {}
+        
+        #Instanciamos el registro que queremos guardar (browse similar antiguo read)       
+        current_object = self.browse(cr,uid, ids, context=context)
+        
+        time_range_ids = self.search(cr,uid, [('id','!=',current_object.id),('time_table_id','=',current_object.time_table_id),('name','=ilike',current_object.name), context=context)
+
+        if time_range_ids:
+            _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
+            _logger.info(time_range_ids)
+
+            return False
+        
+        return True    
+
     
     _columns = {
         'name':fields.char('Name', size=64,required=True),
         'time_table_id': fields.many2one('time.table',required=True, string="Time table detail"),
         'day_of_week': fields.selection(DAY_OF_WEEK, 'Day of the week', help="Day of the week"), 
         'hour_start':fields.float('From',required=True, help = 'Hour of the begin on the day'),  
-        'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),      
-    }       
+        'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),  
+        'sequence':fields.integer('Sequence'),    
+    }
+    
+    _defaults = {
+                'sequence': 1,
+    }
+    
+    _constraints = [
+        (_check_time_range,_("The Time Table day and hour must be unique"),['day_of_week','hour_start','hour_end'])
+    ]
 
 # Asistencia alumnos Cabecera
 class student_attendance(osv.osv):
@@ -260,6 +349,4 @@ class student_attendance_detail(osv.osv):
         'sign': fields.boolean(string="sign"),
     } 
     
-    _defaults = {
-                'sign': False,
-    }
+
