@@ -198,7 +198,8 @@
                                 <field name="name" />
                                 <field name="day_of_week"/>						
                                 <field name="hour_start" widget="float_time"/>		
-                                <field name="hour_end" widget="float_time"/>			                                                                      
+                                <field name="hour_end" widget="float_time"/>
+                                <field name="total_hours" widget="float_time"/>			                                                                      
                             </tree>
                         </field>
 

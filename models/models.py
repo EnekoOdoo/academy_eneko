@@ -77,7 +77,6 @@ class res_partner(osv.osv):
         'courses_ids':fields.one2many('course', 'academy_id',string="Courses"),
         'is_student': fields.boolean('Is Student', help="True if is student"),  
         'is_teacher': fields.boolean('Is Teacher', help="True if is teacher"), 
-        
     }
     
     #Restricción lógica de Odoo a nivel python como equivalente a las de BB.DD.
@@ -190,7 +189,7 @@ class subject(osv.osv):
         #Instanciamos el registro que queremos guardar (browse similar antiguo read)       
         current_object = self.browse(cr,uid, ids, context=context)
         
-        previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name), context=context)
+        previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name)], context=context)
 
         if previous_name_ids:
             _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
@@ -244,7 +243,7 @@ class time_table(osv.osv):
         #Instanciamos el registro que queremos guardar (browse similar antiguo read)       
         current_object = self.browse(cr,uid, ids, context=context)
         
-        previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name), context=context)
+        previous_name_ids = self.search(cr,uid, [('id','!=',current_object.id),('name','=ilike',current_object.name)], context=context)
 
         if previous_name_ids:
             _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
@@ -284,23 +283,58 @@ class time_table_detail(osv.osv):
     """ Horario Detalle"""
     _name = 'time.table.detail'
 
-    def _check_time_range(self,cr,uid, ids, context=None):
+    def _check_current_time_range(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
+        current_obj = self.browse(cr, uid, ids, context=context)
+        
+        if current_obj.hour_end <= current_obj.hour_start:
+            return False
+            
+        if current_obj.hour_start < 0.0 or current_obj.hour_start > 24.0:
+            return False
+            
+        if current_obj.hour_end < 0.0 or current_obj.hour_end > 24.0:
+            return False
+            
+        return True
+        
+    
+    def _check_previous_time_range(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
+        current_obj = self.browse(cr, uid, ids, context=context)
+        
+        previous_name_ids = self.search(cr, uid, 
+                        ['|','|',
+                        '&',('hour_start','<=',current_obj.hour_start),('hour_end','>=',current_obj.hour_start),
+                        '&',('hour_start','<=',current_obj.hour_end),('hour_end','>=',current_obj.hour_end),
+                        '&',('hour_start','>',current_obj.hour_start),('hour_end','<',current_obj.hour_end),
+                        ('id','!=',current_obj.id),
+                        ('time_table_id','=',current_obj.time_table_id.id),
+                        ('day_of_week','=',current_obj.day_of_week)], 
+                        context=context)
+            
+        if previous_name_ids:
+            return False
+            
+        return True
+
+    def _get_total_hours(self, cr, uid, ids, field_name, arg, context=None):
+        
         if context is None:
             context = {}
         
+        result={}
         #Instanciamos el registro que queremos guardar (browse similar antiguo read)       
         current_object = self.browse(cr,uid, ids, context=context)
+                
+        result[current_object.id]= current_object.hour_end - current_object.hour_start
+           
         
-        time_range_ids = self.search(cr,uid, [('id','!=',current_object.id),('time_table_id','=',current_object.time_table_id),('name','=ilike',current_object.name), context=context)
-
-        if time_range_ids:
-            _logger.info('--------------LOGUEANDO por si acaso. Prueba. No sirve si está bien ----------------')
-            _logger.info(time_range_ids)
-
-            return False
-        
-        return True    
-
+        return result    
     
     _columns = {
         'name':fields.char('Name', size=64,required=True),
@@ -309,14 +343,16 @@ class time_table_detail(osv.osv):
         'hour_start':fields.float('From',required=True, help = 'Hour of the begin on the day'),  
         'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),  
         'sequence':fields.integer('Sequence'),    
+        'total_hours': fields.function(_get_total_hours, type='float', store=True, string='Total hours  of this day',method=True),
+
     }
     
     _defaults = {
                 'sequence': 1,
     }
     
-    _constraints = [
-        (_check_time_range,_("The Time Table day and hour must be unique"),['day_of_week','hour_start','hour_end'])
+    _constraints = [(_check_current_time_range,_("The  time detail current"),['day_of_week','hour_start','hour_end']),
+                    (_check_previous_time_range,_("The  time detail previous"),['day_of_week','hour_start','hour_end']),
     ]
 
 # Asistencia alumnos Cabecera
