@@ -40,7 +40,7 @@ TIME_TABLE_TYPE = [('course', 'Course'), ('subject', 'Subject')]
 ATTENDANCE_STATE = [('draft', 'Draft'), ('confirmed', 'Confirmed'),
                     ('cancel', 'Cancel'), ('done', 'Done')]
 ACADEMY_TYPE_LIST = [('public', 'Public'), ('private', 'Private'), ('concerted', 'Concerted')]
-DAY_OF_WEEK = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), 
+DAYS_OF_WEEK = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), 
                 ('thursday', 'Thursday'), ('friday', 'Friday')]
 
 #CLASES
@@ -103,6 +103,7 @@ class course(osv.osv):
     _columns = {
         'academy_id':fields.many2one('res.partner',required=True, domain =[('is_academy','=',True)], string="Academy",ondelete='restrict'),
         'time_table_id': fields.many2one('time.table', help = "Time table of courses", string="Time Table", ondelete='restrict'),
+        'time_table_id_detail_ids': fields.related('time_table_id','time_table_detail_ids',relation="time.table.detail", type='one2many', string="Time Tables"),
         'name':fields.char('Name', size=64,required=True),
         'description':fields.text('Description', required=False),
         'hours':fields.integer('Hours',required=True, help = 'Duration in hours'),
@@ -227,9 +228,23 @@ class course_subject(osv.osv):
     _columns = {
         'name':fields.char('Name', size=64,required=True),        
         'course_id': fields.many2one('course', help = "Course",required=True, string="Course", ondelete='restrict'),
+        'course__id_time_table_detail': fields.related("course_id","time_table_id_detail_ids", relation="time.table.detail", type="one2many", string="Time Tables of Courses"),
         'subject_id': fields.many2one('subject', help = "Subject", required=True, string="Subject", ondelete='restrict'),
-        'time_table_id': fields.many2one('time.table', string="Time table detail"),
+        'child_ids': fields.one2many('course.subject.time.table.detail', 'course_subject_id', string='Time table'),
     }
+class course_subject_time_table_detail(osv.osv):    
+    """ Course subject time table detail  """
+    _name = 'course.subject.time.table.detail'
+    
+    _columns = {
+                'name': fields.char('Name', required=True, size=16),
+                'course_subject_id': fields.many2one('course.subject', 'Course-Subject relation', required=True),
+                'day_of_week': fields.selection(DAYS_OF_WEEK, 'Days of week', required=True),
+                'hour_start': fields.float('From',digits=(4,2), required=True, help='Hour from'),                
+                'hour_end': fields.float('To', digits=(4,2), required=True, help='Hour to'),  
+                'sequence': fields.integer('Sequence'),              
+    }
+    
 
  # Horario
 class time_table(osv.osv):
@@ -256,7 +271,6 @@ class time_table(osv.osv):
     _columns = {
         'name':fields.char('Name', size=64,required=True),
         'description':fields.text('Description', required=False),
-        'type': fields.selection(TIME_TABLE_TYPE, 'type', help="Type of time table"),
         'time_table_detail_ids':fields.one2many('time.table.detail', 'time_table_id',string="Hours"),
     }
     
@@ -339,7 +353,7 @@ class time_table_detail(osv.osv):
     _columns = {
         'name':fields.char('Name', size=64,required=True),
         'time_table_id': fields.many2one('time.table',required=True, string="Time table detail"),
-        'day_of_week': fields.selection(DAY_OF_WEEK, 'Day of the week', help="Day of the week"), 
+        'day_of_week': fields.selection(DAYS_OF_WEEK, 'Day of the week', help="Day of the week"), 
         'hour_start':fields.float('From',required=True, help = 'Hour of the begin on the day'),  
         'hour_end':fields.float('To',required=True, help = 'Hour of the end on the day'),  
         'sequence':fields.integer('Sequence'),    

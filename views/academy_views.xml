@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
+ 
     <!-- Academia -->
         <!-- Lista Academia-->
         <record model="ir.ui.view" id="academy_tree_view">
@@ -45,8 +46,17 @@
                             </group>
                         </group>
                          
-                        <label for="courses_ids" />
-                        <field name="courses_ids"  readonly="1"> 
+                        <label for="courses_ids" />                        
+                        <field name="courses_ids"  readonly="1">  
+                            <form>
+                                <field name="name"/>
+                                <field name="name"/>	
+                                <field name="description"/>			
+                                <field name="hours" string="Hours of the course"/>	
+                                <field name="date_start"/>										
+                                <field name="date_end"/> 						
+                                <field name="state"/>
+                            </form>	                          
                             <tree>
                                 <field name="name"/>	
                                 <field name="description"/>			
@@ -55,7 +65,11 @@
                                 <field name="date_end"/> 						
                                 <field name="state"/>
                             </tree>	                          
-                        </field>
+                        </field>     
+                        -->
+                                
+                       
+                           
                    </form>
                 </field>
         </record>			
@@ -119,7 +133,9 @@
                                     <field name="max_students" string="Maximum Student" />
                                     <field name="min_students" string="Maximum Student"/>																				
                                 </group>
-                            </group>
+                            </group>                           
+                            
+                            
                             <notebook>
                                 <page string="Subjects">
                                     <field name="subject_ids"/>
@@ -135,6 +151,44 @@
                     </form>
 				</field>
 		</record>	
+
+        <!-- Course-Subject Views-->
+        <record model="ir.ui.view" id="course_subject_form_view">
+			<field name="name">Course Subject Form</field>
+			<field name="model">course.subject</field>
+			<field name="arch" type="xml">
+				<form string="Course Subject">
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="subject_id" />                                
+                        </group>
+                    </group>  
+      
+                             
+                    <label for="course__id_time_table_detail"/>
+
+                    <field name="course__id_time_table_detail" readonly="1" >
+                        <tree>
+                            <field name="name" />
+                            <field name="day_of_week"/>						
+                            <field name="hour_start" widget="float_time"/>		
+                            <field name="hour_end" widget="float_time"/>
+                        </tree>
+                    </field>
+                                         
+                    <field name="child_ids">
+                        <tree editable="bottom" default_order="sequence">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name" />
+                            <field name="day_of_week"/>
+                            <field name="hour_start" widget="float_time"/>
+                            <field name="hour_end" widget="float_time"/>
+                        </tree>
+                    </field>
+				</form>
+			</field>
+		</record>
         		
     <!-- Materias -->
       <!-- Lista Materias-->
@@ -172,7 +226,6 @@
                 <field name="model">time.table</field>
                 <field name="arch" type="xml">					
                     <tree>
-                        <field name="type"/>
                         <field name="name"/>	
                         <field name="description"/>	
                     </tree>					
@@ -187,8 +240,7 @@
 					<form string="TimeTable">                        
 						<group>
 							<field name="name" on_change="onchange_name(name)"/>
-							<field name="description"/>
-                             <field name="type"/>
+							<field name="description"/>                             
 						</group>
                         
                         <label for="time_table_detail_ids" /> 

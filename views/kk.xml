@@ -12,6 +12,25 @@
             <field name ="domain">[('is_academy', '=', True)]</field>	 
             <field name ="context" eval = "{'default_is_academy': True, 'default_academy_type' : 'public'}"/>	 
         </record>        
+     <!-- Prueba -->
+        <record model="ir.actions.act_window" id="prueba_action" >
+            <field name="name">Prueba Accion</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="prueba_tree_view"/>
+            <field name ="domain">[('is_academy', '=', True)]</field>	
+            <field name="help" type="html">
+              <p>
+                Here is a list of all courses.
+              </p>
+            </field>
+        </record>
+        <menuitem
+            action="prueba_action"
+            id="prueba_menu"
+            parent="menu_configuration"
+            sequence="90"/>
         
 		<record model="ir.actions.act_window.view" id="action_academy_form">
 			<field name="view_mode">form</field>
@@ -159,5 +178,12 @@
 			parent="menu_configuration"
 			sequence="70"			
 			action="action_time_table" />
+    <!--
+        <menuitem id="menu_time_table_ext" 
+			name="Prueba" 
+			parent="menu_configuration"
+			sequence="85"			
+			action="prueba_action" />
+    -->
 	 </data>
 </openerp>
